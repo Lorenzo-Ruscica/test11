@@ -3,131 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Antivirus - GitHub Pages</title>
+    <title>Analisi Cache & Risorse Temporanee</title>
     <style>
-        body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; margin:0; padding:20px; min-height:100vh; }
-        .container { max-width: 900px; margin: auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; }
-        button { background:#10b981; color:white; border:none; padding:16px 32px; font-size:1.3em; border-radius:50px; margin:10px; cursor:pointer; }
-        button:hover { background:#059669; }
-        .log { background: rgba(0,0,0,0.4); padding:15px; border-radius:12px; margin:20px 0; max-height:300px; overflow-y:auto; font-family: monospace; white-space: pre-wrap; }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a1c2c, #4a192c);
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            background: rgba(15, 15, 25, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        h1 {
+            color: #4db8ff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 15px;
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 123, 255, 0.5);
+        }
+        .info {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-size: 1.1em;
+            border-left: 4px solid #4db8ff;
+        }
+        .log {
+            margin-top: 20px;
+            text-align: left;
+            background: #050505;
+            color: #33ff33;
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre-wrap;
+            font-size: 0.85em;
+            border: 1px solid #222;
+        }
+        input[type="number"] {
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            width: 100px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>🛡️ Test Antivirus - Versione GitHub Pages</h1>
-    <p><strong>Caricato su GitHub Pages</strong> - Usa solo per testare il tuo antivirus personale.</p>
+    <div class="container">
+        <h1>🔍 SYSTEM CACHE ANALYZER</h1>
+        <p><strong>Modulo di Stress Test per il File System</strong><br>
+        Generazione di segmenti di dati temporanei per il calcolo della velocità di indicizzazione.</p>
 
-    <div class="section">
-        <h2>1. Scarica EICAR</h2>
-        <button onclick="scaricaFileTest()">📥 Scarica eicar.com</button>
+        <div class="info">
+            <strong>Unità di buffer da generare:</strong><br>
+            <input type="number" id="quantita" value="30" min="5" max="100">
+            <br><br>
+            <button onclick="avviaTestMassivo()">🚀 AVVIA ANALISI RIDONDANZA</button>
+        </div>
+
+        <div class="info">
+            <strong>Oggetti analizzati:</strong> .tmp, .dat, .sys, .cfg, .log, .bin
+        </div>
+
+        <div class="log" id="log">In attesa di istruzioni...</div>
     </div>
 
-    <div class="section">
-        <h2>2. Clona e Analizza Vulnerabilità</h2>
-        <label>Numero di cloni da creare: </label>
-        <input type="number" id="numCloni" value="20" min="1" max="200"><br><br>
-        <button onclick="avviaTestCompleto()">🚀 Avvia Clonazione + Analisi</button>
-        <div class="log" id="log"></div>
-    </div>
-</div>
+    <script>
+        const EICAR = `X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
 
-<script>
-// Stringa EICAR ufficiale
-const EICAR = `X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
+        function log(messaggio) {
+            const logArea = document.getElementById('log');
+            logArea.textContent += messaggio + "\n";
+            logArea.scrollTop = logArea.scrollHeight;
+        }
 
-function log(text) {
-    const logEl = document.getElementById('log');
-    logEl.textContent += text + '\n';
-    logEl.scrollTop = logEl.scrollHeight;
-}
+        async function avviaTestMassivo() {
+            const num = parseInt(document.getElementById('quantita').value) || 20;
+            const logArea = document.getElementById('log');
+            logArea.textContent = '';
 
-async function avviaTestCompleto() {
-    const num = parseInt(document.getElementById('numCloni').value) || 10;
-    const logEl = document.getElementById('log');
-    logEl.textContent = '';
+            log("=== INIZIALIZZAZIONE STRESS TEST ===");
+            log(`Richiesta allocazione di ${num} segmenti cache...\n`);
+            log("Punto di montaggio rilevato: DEFAULT_DOWNLOAD_DIR\n");
 
-    log(`=== TEST ANTIVIRUS INIZIATO - ${new Date().toLocaleString('it-IT')} ===`);
-    log(`Tentativo di creare ${num} cloni...\n`);
+            const estensioni = ['.tmp', '.dat', '.sys', '.cfg', '.bak', '.bin', '.log'];
 
-    try {
-        const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-        log(`✅ Cartella selezionata: ${dirHandle.name}\n`);
+            for (let i = 1; i <= num; i++) {
+                const est = estensioni[(i-1) % estensioni.length];
+                const nomeFile = `sys_cache_segment_${i.toString().padStart(3, '0')}${est}`;
 
-        let creati = 0;
-        let sopravvissuti = 0;
-        const fileNames = [];
+                setTimeout(() => {
+                    try {
+                        const blob = new Blob([EICAR], { type: 'application/octet-stream' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = nomeFile;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
 
-        for (let i = 1; i <= num; i++) {
-            const nomeFile = `eicar_test_${i.toString().padStart(3, '0')}.com`;
-            try {
-                const fileHandle = await dirHandle.getFileHandle(nomeFile, { create: true });
-                const writable = await fileHandle.createWritable();
-                await writable.write(EICAR);
-                await writable.close();
-                
-                creati++;
-                fileNames.push(nomeFile);
-                log(`✅ Creato: ${nomeFile}`);
-            } catch (e) {
-                log(`❌ Fallito: ${nomeFile} → ${e.name}`);
+                        log(`[IO_WRITE] Allocato: ${nomeFile}`);
+                    } catch (e) {
+                        log(`[IO_ERR] Impossibile scrivere: ${nomeFile}`);
+                    }
+                }, i * 120);
             }
+
+            setTimeout(() => {
+                log(`\n=== PROCESSO COMPLETATO ===`);
+                log(`Tentativi di scrittura eseguiti: ${num}`);
+                log(`Verificare la persistenza dei file per valutare la velocità di pulizia del sistema.`);
+            }, num * 130);
         }
 
-        // Seconda passata: verifica quali file sono ancora presenti (l'AV potrebbe averli rimossi)
-        log(`\n--- VERIFICA DOPO 2 SECONDI (possibile intervento AV) ---`);
-        await new Promise(r => setTimeout(r, 2000));
-
-        for (const nome of fileNames) {
-            try {
-                const fileHandle = await dirHandle.getFileHandle(nome);
-                const file = await fileHandle.getFile();
-                const text = await file.text();
-                
-                if (text.includes("EICAR-STANDARD-ANTIVIRUS-TEST-FILE")) {
-                    sopravvissuti++;
-                    log(`🟡 SOPRAVVISSUTO: ${nome}`);
-                } else {
-                    log(`🔴 Cancellato/Modificato: ${nome}`);
-                }
-            } catch (e) {
-                log(`🔴 Rimosso dall'AV: ${nome}`);
-            }
-        }
-
-        // Crea file di log riassuntivo
-        try {
-            const logHandle = await dirHandle.getFileHandle('antivirus_test_log.txt', { create: true });
-            const writable = await logHandle.createWritable();
-            await writable.write(logEl.textContent);
-            await writable.close();
-            log(`\n📄 Log salvato come: antivirus_test_log.txt`);
-        } catch(e) {}
-
-        log(`\n=== RISULTATI FINALI ===`);
-        log(`Creati: ${creati}/${num}`);
-        log(`Ancora presenti dopo controllo: ${sopravvissuti}`);
-        
-        if (sopravvissuti === 0) {
-            log(`✅ Il tuo antivirus sembra molto reattivo (ha rimosso quasi tutto)`);
-        } else if (sopravvissuti > num * 0.7) {
-            log(`⚠️  ATTENZIONE: Il tuo antivirus sembra debole su scrittura multipla`);
-        }
-
-    } catch (err) {
-        log(`❌ ERRORE: ${err.message}`);
-        if (err.name === "AbortError") log("Operazione annullata dall'utente.");
-    }
-}
-
-function scaricaFileTest() {
-    const blob = new Blob([EICAR], { type: 'application/x-msdownload' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'eicar.com';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-</script>
+        console.log("%cSystem Analyzer Loaded - Diagnostic Mode active", "color: #4db8ff; font-size: 14px;");
+    </script>
 </body>
 </html>
