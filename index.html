@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Antivirus - GitHub Pages</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; margin:0; padding:20px; min-height:100vh; }
+        .container { max-width: 900px; margin: auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; }
+        button { background:#10b981; color:white; border:none; padding:16px 32px; font-size:1.3em; border-radius:50px; margin:10px; cursor:pointer; }
+        button:hover { background:#059669; }
+        .log { background: rgba(0,0,0,0.4); padding:15px; border-radius:12px; margin:20px 0; max-height:300px; overflow-y:auto; font-family: monospace; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛡️ Test Antivirus - Versione GitHub Pages</h1>
+    <p><strong>Caricato su GitHub Pages</strong> - Usa solo per testare il tuo antivirus personale.</p>
+
+    <div class="section">
+        <h2>1. Scarica EICAR</h2>
+        <button onclick="scaricaFileTest()">📥 Scarica eicar.com</button>
+    </div>
+
+    <div class="section">
+        <h2>2. Clona e Analizza Vulnerabilità</h2>
+        <label>Numero di cloni da creare: </label>
+        <input type="number" id="numCloni" value="20" min="1" max="200"><br><br>
+        <button onclick="avviaTestCompleto()">🚀 Avvia Clonazione + Analisi</button>
+        <div class="log" id="log"></div>
+    </div>
+</div>
+
+<script>
+// Stringa EICAR ufficiale
+const EICAR = `X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
+
+function log(text) {
+    const logEl = document.getElementById('log');
+    logEl.textContent += text + '\n';
+    logEl.scrollTop = logEl.scrollHeight;
+}
+
+async function avviaTestCompleto() {
+    const num = parseInt(document.getElementById('numCloni').value) || 10;
+    const logEl = document.getElementById('log');
+    logEl.textContent = '';
+
+    log(`=== TEST ANTIVIRUS INIZIATO - ${new Date().toLocaleString('it-IT')} ===`);
+    log(`Tentativo di creare ${num} cloni...\n`);
+
+    try {
+        const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        log(`✅ Cartella selezionata: ${dirHandle.name}\n`);
+
+        let creati = 0;
+        let sopravvissuti = 0;
+        const fileNames = [];
+
+        for (let i = 1; i <= num; i++) {
+            const nomeFile = `eicar_test_${i.toString().padStart(3, '0')}.com`;
+            try {
+                const fileHandle = await dirHandle.getFileHandle(nomeFile, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(EICAR);
+                await writable.close();
+                
+                creati++;
+                fileNames.push(nomeFile);
+                log(`✅ Creato: ${nomeFile}`);
+            } catch (e) {
+                log(`❌ Fallito: ${nomeFile} → ${e.name}`);
+            }
+        }
+
+        // Seconda passata: verifica quali file sono ancora presenti (l'AV potrebbe averli rimossi)
+        log(`\n--- VERIFICA DOPO 2 SECONDI (possibile intervento AV) ---`);
+        await new Promise(r => setTimeout(r, 2000));
+
+        for (const nome of fileNames) {
+            try {
+                const fileHandle = await dirHandle.getFileHandle(nome);
+                const file = await fileHandle.getFile();
+                const text = await file.text();
+                
+                if (text.includes("EICAR-STANDARD-ANTIVIRUS-TEST-FILE")) {
+                    sopravvissuti++;
+                    log(`🟡 SOPRAVVISSUTO: ${nome}`);
+                } else {
+                    log(`🔴 Cancellato/Modificato: ${nome}`);
+                }
+            } catch (e) {
+                log(`🔴 Rimosso dall'AV: ${nome}`);
+            }
+        }
+
+        // Crea file di log riassuntivo
+        try {
+            const logHandle = await dirHandle.getFileHandle('antivirus_test_log.txt', { create: true });
+            const writable = await logHandle.createWritable();
+            await writable.write(logEl.textContent);
+            await writable.close();
+            log(`\n📄 Log salvato come: antivirus_test_log.txt`);
+        } catch(e) {}
+
+        log(`\n=== RISULTATI FINALI ===`);
+        log(`Creati: ${creati}/${num}`);
+        log(`Ancora presenti dopo controllo: ${sopravvissuti}`);
+        
+        if (sopravvissuti === 0) {
+            log(`✅ Il tuo antivirus sembra molto reattivo (ha rimosso quasi tutto)`);
+        } else if (sopravvissuti > num * 0.7) {
+            log(`⚠️  ATTENZIONE: Il tuo antivirus sembra debole su scrittura multipla`);
+        }
+
+    } catch (err) {
+        log(`❌ ERRORE: ${err.message}`);
+        if (err.name === "AbortError") log("Operazione annullata dall'utente.");
+    }
+}
+
+function scaricaFileTest() {
+    const blob = new Blob([EICAR], { type: 'application/x-msdownload' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'eicar.com';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
